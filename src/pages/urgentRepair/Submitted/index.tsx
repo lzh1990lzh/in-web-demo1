@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Space, Table, Select, Row, Col, Form, DatePicker, Button } from 'antd';
+import { Space, Table, Select, Row, Col, Form, DatePicker, Button,pagination } from 'antd';
 import { connect, Dispatch } from 'umi';
 import moment from 'moment';
 import { ConnectState } from '@/models/connect'
@@ -24,6 +24,11 @@ interface CollectionCreateFormProps {
   loading?: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
+  pages?:appSubItemType;
+  pagination?:{};
+  total?:string;
+  pageSize?:string;
+  pageNum?:string;
 }
 
 const CollectionsPage: React.FC<CollectionCreateFormProps> = (props) => {
@@ -39,6 +44,42 @@ const CollectionsPage: React.FC<CollectionCreateFormProps> = (props) => {
   const [beginTime, setBeginTime] = useState<string>('');
   const [endTime, setEndTime] = useState<string>(''); 
 
+  //page 为 model 层的数据，存放总数，当前页码，以及size
+//const { page } = this.props
+const {pages={}}=props;
+console.log(pages,"pages#");
+console.log(pages.total);
+const pagination = {
+  showSizeChanger: true, //是否可以改变 pageSize
+  showQuickJumper: false, //是否可以快速跳转至某页
+  showSizeChanger:true,
+  pageSizeOptions:[],
+  total: pages.total,
+  pageSize: pages.pageSize,
+  current: pages.pageNum,
+  //显示总条数
+  showTotal: ( total, range ) => `总共 ${total} 条`,   
+  //pageSize 变化的回调
+  onShowSizeChange: (current, pageSize) =>changePageSize(current, pageSize),
+  //页码改变的回调，参数是改变后的页码及每页条数
+  onChange: (current, pageSize) =>changePage(current, pageSize),
+}
+
+function changePage(current, pageSize){
+  console.log(current,pageSize);
+    const { dispatch } = props;
+    //setReportStatus(`${value}`);
+    setPageNum(`${current}`);
+    console.log(dispatch,"dispatchdispatchdispatch");
+    const params = {
+      pageIndex: current,
+      pageSize: pageSize,
+    };
+    dispatch({
+      type: 'urgentSubmit/queryList',
+      payload: params,
+    })
+}
   
   const onCreate = values => {
     setVisible(false);
@@ -176,7 +217,7 @@ const CollectionsPage: React.FC<CollectionCreateFormProps> = (props) => {
         </Col>
       </Row>
 
-      <Table dataSource={appSubList} columns={columns} rowKey="id"/>
+      <Table dataSource={appSubList} columns={columns}  pagination={pagination}  rowKey="id"/>
       <Detail
         visible={visible}
         detail={appSubInfo}
@@ -197,4 +238,5 @@ export default connect(({ urgentSubmit, loading }: ConnectState) => ({
   appSubList: urgentSubmit.list,
   appSubInfo: urgentSubmit.infoList,
   appSubExport: urgentSubmit.exportList,
+  pages:urgentSubmit.info,
 }))(CollectionsPage);

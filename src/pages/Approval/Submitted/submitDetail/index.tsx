@@ -40,7 +40,7 @@ const appSubmitDetail: React.FC<submitDetailProps>=(props)=>{
             <Form.Item label="填报单位" name="orgName">
               <Input disabled />
             </Form.Item>
-            <Form.Item label="填报人" name="reportUser">
+            <Form.Item label="填报人" name="reportUserName">
               <Input disabled />
             </Form.Item>
             <Form.Item label="标题" name="reportTitle">

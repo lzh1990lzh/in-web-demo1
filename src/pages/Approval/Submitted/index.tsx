@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Space, Table, Select, Row, Col, Form, DatePicker, Button,Timeline } from 'antd';
+import { Space, Table, Select, Row, Col, Form, DatePicker, Button,Timeline,pagination  } from 'antd';
 import { connect, Dispatch } from 'umi';
 import moment from 'moment';
 import { ConnectState } from '@/models/connect'
@@ -21,27 +21,84 @@ interface CollectionCreateFormProps {
   appSubList?: appSubItemType[];
   appSubInfo:appSubItemType;
   appSubExport:appSubItemType;
+  appSubPage:appSubItemType;
   loading?: boolean;
   onCreate: (values: Values) => void;
   onCancel: () => void;
-  
+  pages?:appSubItemType;
+  pagination?:{};
+  total?:string;
+  pageSize?:string;
+  pageNum?:string;
 }
 
 const CollectionsPage: React.FC<CollectionCreateFormProps> = (props) => {
-  //console.log(props,"props11");  
-  const {appSubInfo={}}=props;
+  console.log(props,"props11"); 
+  
+  const {appSubInfo={}}=props;  
   const {appSubExport=[]}=props;
+  const {appSubPage={}}=props;
+  
   
   const { dispatch, appSubList } = props
 
   const [visible, setVisible] = useState(false);
-  const [pageIndex, setPageNum] = useState<number>(0);
+  const [pageIndex, setPageNum] = useState<number>(1);
   const pageSize: number = 10;
   const [reportStatus, setReportStatus] = useState<String>('');
   const [beginTime, setBeginTime] = useState<string>('');
   const [endTime, setEndTime] = useState<string>(''); 
   
-  //console.log(urlArr.path);
+//page 为 model 层的数据，存放总数，当前页码，以及size
+//const { page } = this.props
+const {pages={}}=props;
+console.log(pages,"pages#");
+console.log(pages.total);
+const pagination = {
+  showSizeChanger: true, //是否可以改变 pageSize
+  showQuickJumper: false, //是否可以快速跳转至某页
+  showSizeChanger:true,
+  pageSizeOptions:[],
+  total: pages.total,
+  pageSize: pages.pageSize,
+  current: pages.pageNum,
+  //显示总条数
+  showTotal: ( total, range ) => `总共 ${total} 条`,   
+  //pageSize 变化的回调
+  onShowSizeChange: (current, pageSize) =>changePageSize(current, pageSize),
+  //页码改变的回调，参数是改变后的页码及每页条数
+  onChange: (current, pageSize) =>changePage(current, pageSize),
+}
+
+function changePage(current, pageSize){
+  console.log(current,pageSize);
+    const { dispatch } = props;
+    //setReportStatus(`${value}`);
+    setPageNum(`${current}`);
+    console.log(dispatch,"dispatchdispatchdispatch");
+    const params = {
+      pageIndex: current,
+      pageSize: pageSize,
+    };
+    dispatch({
+      type: 'appSubmit/queryList',
+      payload: params,
+    })
+}
+// function changePageSize(current, pageSize){
+//   alert("size");
+//   const { dispatch } = props;
+//   console.log(dispatch,"dispatchdispatchdispatch");
+//   const params = {
+//     pageIndex: current,
+//     pageSize: pageSize,
+//   };
+//   dispatch({
+//     type: 'appSubmit/queryList',
+//     payload: params,
+//   })
+// }
+  
   const onCreate = values => {
     //console.log('Received values of form: ', values);
     setVisible(false);
@@ -151,7 +208,8 @@ const CollectionsPage: React.FC<CollectionCreateFormProps> = (props) => {
         pageIndex, pageSize
       }
     });
-    console.log(appSubList,"list************")
+   console.log(appSubList,"appSubList");
+   console.log(pages,"pagespages");
   }, []);
 
   return (
@@ -186,8 +244,9 @@ const CollectionsPage: React.FC<CollectionCreateFormProps> = (props) => {
           >查询</Button>
         </Col>
       </Row>
+   
 
-      <Table dataSource={appSubList} columns={columns} rowKey="id"/>
+      <Table dataSource={appSubList} columns={columns}   pagination={pagination} rowKey="id"/>
       <Detail
         visible={visible}
         detail={appSubInfo}
@@ -206,4 +265,5 @@ export default connect(({ appSubmit, loading }: ConnectState) => ({
   appSubList: appSubmit.list,
   appSubInfo:appSubmit.infoList,
   appSubExport:appSubmit.exportList,
+  pages:appSubmit.info,
 }))(CollectionsPage);

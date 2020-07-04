@@ -8,10 +8,23 @@ import { getPageQuery } from '@/utils/utils';
 import { json } from 'express';
 import { Local } from '@/utils/session';
 
+export interface pages {
+  page:{
+    total?:string,
+    pageNum?:string,
+    pageSize?:string,
+  }
+}
 export interface appSubItemType {
   list?: any;
   infoList?:any;
   exportList?:any;
+  info:{
+    total?:string,
+    pageNum?:string,
+    pageSize?:string,
+    size?:string,
+  }
 }
 
 export interface appSubModelType {
@@ -21,11 +34,13 @@ export interface appSubModelType {
     queryList: Effect;
     queryInfo:Effect;
     queryExport:Effect;
+   
   };
   reducers: {
     setList: Reducer<appSubItemType>;
     setInfo: Reducer<appSubItemType>;
     setExport: Reducer<appSubItemType>;
+    setPage:Reducer<appSubItemType>;
   };
 }
 
@@ -34,29 +49,49 @@ const Model: appSubModelType = {
   state: {
     list: [],
     infoList:[],
-    exportList:[]
+    exportList:[],
+    info:{
+      total:'',
+      pageNum:'',
+      pageSize:'',
+      size:'',
+    }
   },
 
   effects: {
+    
     *queryList({ payload }, { call, put }) {
       const res = yield call(approvalYjsbSubList, payload);
       console.log(res, "res*");
-      const { code, data } = res;
+      const { code, data,info={
+        total:data.total,
+        pageNum:data.pageNum,
+        pageSize:data.pageSize,
+        size:data.size
+      }  } = res;
       if (code !== '0') {
         yield put({
           type: 'setList',
           payload: [],
         });
+        yield put({
+          type: 'setPage',
+          payload: {},
+        });
         return 
       };
       
-      const { list } = data
-     console.log(list,"list&&&&&");
+      const { list,} = data
+    // console.log(info,"info&&&&&");
      // headerParams ? JSON.parse(JSON.stringify(headerParams)) : {}
       console.log(list,"listlistlist");
       yield put({
         type: 'setList',
         payload: list,
+      });
+      yield put({
+        type: 'setPage',
+        payload: info,
       });
     },
     *queryInfo({ payload },{ call, put }){
@@ -96,6 +131,7 @@ const Model: appSubModelType = {
       return {
         ...state,
         list: payload || [],
+        //info:payload || {}
       };
     },
 
@@ -109,6 +145,12 @@ const Model: appSubModelType = {
       return {
         ...state,
         exportList: payload || [],
+      };
+    },
+    setPage(state, { payload }) {
+      return {
+        ...state,
+        info: payload || {},
       };
     },
   },

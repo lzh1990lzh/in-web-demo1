@@ -73,7 +73,7 @@ const appSubmitDetail: React.FC<submitDetailProps>=(props)=>{
             <Form.Item label="填报单位" name="orgName">
               <Input disabled />
             </Form.Item>
-            <Form.Item label="填报人" name="reportUser">
+            <Form.Item label="填报人" name="reportUserName">
               <Input disabled />
             </Form.Item>
             <Form.Item label="提交时间" name="reportTime">
@@ -87,7 +87,7 @@ const appSubmitDetail: React.FC<submitDetailProps>=(props)=>{
               {
                   imgArr.map(function (value, key) {
                     
-                      return (<li style={liStyle} key={key}><a href={imgUrl+value}><img style={imgStyle} src={imgUrl+value}/></a></li>);
+                      return (<li style={liStyle} key={key}><a href={imgUrl+value} target="_blank"><img style={imgStyle} src={imgUrl+value}/></a></li>);
                   })
                 } 
                 <li></li>

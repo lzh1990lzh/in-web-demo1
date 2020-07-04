@@ -12,6 +12,12 @@ export interface appSubItemType {
   list?: any;
   infoList?:any;
   exportList?:any;
+  info:{
+    total?:string,
+    pageNum?:string,
+    pageSize?:string,
+    size?:string,
+  }
 }
 
 export interface appSubModelType {
@@ -26,6 +32,7 @@ export interface appSubModelType {
     setList: Reducer<appSubItemType>;
     setInfo: Reducer<appSubItemType>;
     setExport:Reducer<appSubItemType>;
+    setPage:Reducer<appSubItemType>;
   };
 }
 
@@ -35,17 +42,32 @@ const Model: appSubModelType = {
     list: [],
     infoList:[],
     exportList:[],
+    info:{
+      total:'',
+      pageNum:'',
+      pageSize:'',
+      size:'',
+    }
   },
 
   effects: {
     *queryList({ payload }, { call, put }) {
       const res = yield call(urgentSubList, payload);
       console.log(res, "res*");
-      const { code, data } = res;
+      const { code, data,info={
+        total:data.total,
+        pageNum:data.pageNum,
+        pageSize:data.pageSize,
+        size:data.size
+      }  } = res;
       if (code !== '0') {
         yield put({
           type: 'setList',
           payload: [],
+        });
+        yield put({
+          type: 'setPage',
+          payload: {},
         });
         return 
       };
@@ -53,6 +75,10 @@ const Model: appSubModelType = {
       yield put({
         type: 'setList',
         payload: list,
+      });
+      yield put({
+        type: 'setPage',
+        payload: info,
       });
     },
     
@@ -102,6 +128,12 @@ const Model: appSubModelType = {
       return {
         ...state,
         exportList: payload || [],
+      };
+    },
+    setPage(state, { payload }) {
+      return {
+        ...state,
+        info: payload || {},
       };
     },
   },
