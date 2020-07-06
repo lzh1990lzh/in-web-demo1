@@ -54,12 +54,7 @@ const Model: appSubModelType = {
     *queryList({ payload }, { call, put }) {
       const res = yield call(urgentSubList, payload);
       console.log(res, "res*");
-      const { code, data,info={
-        total:data.total,
-        pageNum:data.pageNum,
-        pageSize:data.pageSize,
-        size:data.size
-      }  } = res;
+      const { code, data} = res;
       if (code !== '0') {
         yield put({
           type: 'setList',
@@ -71,6 +66,12 @@ const Model: appSubModelType = {
         });
         return 
       };
+      const { info={
+        total:data.total,
+        pageNum:parseInt(data.pageNum)+1,
+        pageSize:data.pageSize,
+        size:data.size
+      }  } = res;
       const { list } = data
       yield put({
         type: 'setList',

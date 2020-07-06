@@ -38,7 +38,7 @@ const appSubmitDetail: React.FC<submitDetailProps>=(props)=>{
   >
         <Form {...layout}  form={form}>
           <Form.Item label="填报单位" name="orgName">
-            <Input disabled />
+            <Input disabled  />
           </Form.Item>
           <Form.Item label="填报人" name="reportUserName">
             <Input disabled />
@@ -76,7 +76,7 @@ const appSubmitDetail: React.FC<submitDetailProps>=(props)=>{
           <Form.Item label="积水地下室倒灌(处)" name="waterBasementCount">
             <Input disabled />             
           </Form.Item>
-          <Form.Item label="地下室积水面积(m2)" name="waterBasementArea">
+          <Form.Item label="地下室积水面积(平方米)" name="waterBasementArea">
             <Input disabled />             
           </Form.Item>
           <Form.Item label="房屋漏雨(平房)" name="rainBungalowCount">

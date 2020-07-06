@@ -60,6 +60,9 @@ const appSubmitDetail: React.FC<submitDetailProps>=(props)=>{
             </Form.Item>
             <Form.Item label="提交时间" name="reportTime">
               <Input disabled />
+            </Form.Item>     
+            <Form.Item label="标题" name="reportTitle">
+              <Input disabled />
             </Form.Item>            
             <Form.Item label="文档" name="reportDoc">
               <TextArea rows={4} disabled />

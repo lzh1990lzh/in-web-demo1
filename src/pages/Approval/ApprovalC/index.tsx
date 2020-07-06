@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Space, Table, Select, Row, Col, Form, DatePicker, Button,pagination  } from 'antd';
 import { connect, Dispatch } from 'umi';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import { ConnectState } from '@/models/connect'
 import { appMySpItemType } from '@/models/approvalMyC';
 import Detail from './approvalDetail/index'
@@ -39,51 +39,28 @@ const CollectionsPage: React.FC<CollectionCreateFormProps> = (props) => {
  
 
   const [visible, setVisible] = useState(false);
-  const [pageIndex, setPageNum] = useState<number>(0);
+  const [pageNum, setPageNum] = useState<number>(1);
   const pageSize: number = 10;
   const [reportStatus, setReportStatus] = useState<String>('');
   const [beginTime, setBeginTime] = useState<string>('');
   const [endTime, setEndTime] = useState<string>(''); 
 
-  //page 为 model 层的数据，存放总数，当前页码，以及size
-//const { page } = this.props
-const {pages={}}=props;
-console.log(pages,"pages#");
-console.log(pages.total);
-const pagination = {
-  showSizeChanger: true, //是否可以改变 pageSize
-  showQuickJumper: false, //是否可以快速跳转至某页
-  showSizeChanger:true,
-  pageSizeOptions:[],
-  total: pages.total,
-  pageSize: pages.pageSize,
-  current: pages.pageNum,
-  //显示总条数
-  showTotal: ( total, range ) => `总共 ${total} 条`,   
-  //pageSize 变化的回调
-  onShowSizeChange: (current, pageSize) =>changePageSize(current, pageSize),
-  //页码改变的回调，参数是改变后的页码及每页条数
-  onChange: (current, pageSize) =>changePage(current, pageSize),
-}
-
-function changePage(current, pageSize){
-  console.log(current,pageSize);
-    const { dispatch } = props;
-    //setReportStatus(`${value}`);
-    setPageNum(`${current}`);
-    console.log(dispatch,"dispatchdispatchdispatch");
-    const params = {
-      pageIndex: current,
-      pageSize: pageSize,
-    };
-    dispatch({
-      type: 'approvalMyC/queryList',
-      payload: params,
-    })
-}
-
+//page 为 model 层的数据，存放总数，当前页码，以及size
+  const {pages={}}=props;
+  const pagination = {
+    showSizeChanger: true, //是否可以改变 pageSize
+    showQuickJumper: false, //是否可以快速跳转至某页
+    pageSizeOptions:[],
+    total: pages.total,
+    pageSize,
+    current: pageNum,
+    //显示总条数
+    showTotal: ( total:number ) => `总共 ${total} 条`,   
+    
+    //页码改变的回调，参数是改变后的页码及每页条数
+    onChange: (current: number, pageSize: number) => setPageNum(current),
+  }
   const onCreate = values => {
-    console.log('Received values of form: ', values);
     setVisible(false);
   }; 
 
@@ -126,7 +103,6 @@ function changePage(current, pageSize){
     const { id }=info;
     setVisible(true);   
     const iid='1:'+id;
-    console.log(iid);
     dispatch({
       type: 'approvalMyC/queryInfo',
       payload: {
@@ -137,9 +113,7 @@ function changePage(current, pageSize){
   
 
   function handleChange(value: string) {
-    console.log(`selected ${value}`,"reportStatusreportStatusreportStatus");
     setReportStatus(`${value}`);
-
   }
   function expectDatail(info:appSubItemType) {    
     const { id }=info;  
@@ -154,39 +128,28 @@ function changePage(current, pageSize){
     if(!path || !baseUrl) return
     window.location.href = `${baseUrl}${path}`
   }
- 
-  function handleSearch() {
-    console.log("search##");
+  function queryLit() {
+    let params = {
+      pageIndex: pageNum,
+      pageSize,
+      beginTime, endTime, reportStatus
+    }
+
     dispatch({
       type: 'approvalMyC/queryList',
-      payload: {
-        pageIndex, pageSize,beginTime,endTime,reportStatus
-      }
+      payload: { ...params }
     });
-    console.log("search");
-    console.log(appSubList,"%%infoLlist************")
   }
 
-  function onChange(date: moment, dateString: string){
+  function onChange(date: Moment, dateString: string){
     setBeginTime(dateString[0]);
     setEndTime(dateString[1]);
   }
   
   useEffect(() => {
-    dispatch({
-      type: 'approvalMyC/queryList',
-      payload: {
-        pageIndex, pageSize
-      }
-    });
-    // dispatch({
-    //   type: 'approvalMyC/queryPage',
-    //   payload: {
-        
-    //   }
-    // });
-  }, []);
-
+    queryLit();
+  }, [pageNum]);
+  
   return (
     <PageHeaderWrapper>
       <Row gutter={16}>
@@ -215,7 +178,13 @@ function changePage(current, pageSize){
         </Col>
         <Col className="gutter-row" span={2}>
           <Button type="primary"
-           onClick={handleSearch}
+           onClick={() => {
+            if (pageNum === 1) {
+              queryLit();
+            } else {
+              setPageNum(1)
+            }
+          }}
           >查询</Button>
         </Col>
       </Row>
@@ -229,7 +198,6 @@ function changePage(current, pageSize){
           setVisible(false);
         }}
       />
-
     </PageHeaderWrapper>
   );
 };
