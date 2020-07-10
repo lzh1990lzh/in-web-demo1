@@ -4,7 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
-import { Local } from './session';
+import { Local,Session } from './session';
 import { mergeRes } from './resStatus'
 
 const codeMessage = {
@@ -53,20 +53,21 @@ const errorHandler = (error: { response: Response }): Response => {
  */
 const request = extend({
   errorHandler, // 默认错误处理
-  // prefix: 'http://124.204.48.134:800/oaserver',
-  prefix: '/api',
+  prefix: 'http://39.97.227.181/oaserver',
+  //prefix: 'http://172.16.86.164:10086/oaserver',  
+  // prefix: '/api',
   method: 'POST',
   credentials: 'include' // 默认请求是否带上cookie
 });
 
 request.interceptors.request.use(
   (url,options)=>{
-    const headerParams=Local.get("userInfo") || {}
+    const headerParams=Session.get("userInfo") || {}
     console.log(headerParams,"headerParams");
     const dataResponse = headerParams ? JSON.parse(JSON.stringify(headerParams)) : {}
     console.log(dataResponse.id);
     const headers={
-      userId:dataResponse.id,
+      userId:dataResponse.id || '',
     }
     return {
       url:url,

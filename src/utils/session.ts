@@ -73,7 +73,7 @@ export const Local = {
         }
     },
     remove(key: string) {
-        ls.removeItem(key)
+        ls.removeItem(key) 
     },
     clear() {
         ls.clear()

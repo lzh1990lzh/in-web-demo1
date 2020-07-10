@@ -53,19 +53,19 @@ const appSubmitDetail: React.FC<submitDetailProps>=(props)=>{
     >
           <Form {...layout}  form={form}>
             <Form.Item label="填报单位" name="orgName">
-              <Input disabled />
+              <Input disabled style={{color:'rgba(0, 0, 3, 0.85)'}}/>
             </Form.Item>
             <Form.Item label="填报人" name="reportUserName">
-              <Input disabled />
+              <Input disabled style={{color:'rgba(0, 0, 3, 0.85)'}}/>
             </Form.Item>
             <Form.Item label="提交时间" name="reportTime">
-              <Input disabled />
+              <Input disabled style={{color:'rgba(0, 0, 3, 0.85)'}}/>
             </Form.Item>     
             <Form.Item label="标题" name="reportTitle">
-              <Input disabled />
+              <Input disabled style={{color:'rgba(0, 0, 3, 0.85)'}}/>
             </Form.Item>            
             <Form.Item label="文档" name="reportDoc">
-              <TextArea rows={4} disabled />
+              <TextArea rows={4} disabled style={{color:'rgba(0, 0, 3, 0.85)'}}/>
             </Form.Item>  
             <Form.Item label="图片" name="photoList">
               <ul>
@@ -84,7 +84,7 @@ const appSubmitDetail: React.FC<submitDetailProps>=(props)=>{
             <Timeline>            
                 {
                   arr.map(function (value, key) {
-                      return (<Timeline.Item key={key}>{value.checkUserName}--{value.checkStatusName}    {value.checkTime}</Timeline.Item>);
+                      return (<Timeline.Item key={key}>{value.checkUserName}  {value.checkStatusName}    {value.checkTime}<p style={{color:'#737171'}}>{value.description}</p></Timeline.Item>);
                   })
                 }              
             </Timeline>

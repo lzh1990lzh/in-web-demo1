@@ -6,7 +6,8 @@ import { fakeAccountLogin } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { json } from 'express';
-import { Local } from '@/utils/session';
+import { Session, Local  } from '@/utils/session';
+
 
 export interface StateType {
   status?: string;
@@ -64,9 +65,6 @@ const Model: LoginModelType = {
       const {userNumber}= payload
       if (!response) return
       const { code, data = {} } = response
-      
-      console.log(response.code);
-
       const dataResponse = data ? JSON.parse(JSON.stringify(data)) : {}     
       const userName=dataResponse.userName;
       Object.keys(dataResponse).forEach(item => {
@@ -82,20 +80,18 @@ const Model: LoginModelType = {
         payload: dataResponse,
       });
      
-      Local.set('userName',userName);
+      Session.set('userName',userName);
       if (response.code === '0') {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params as { redirect: string };
-        console.log(redirect,"redirect");
-       ;
         if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-          console.log(redirectUrlParams,"redirectUrlParams");
+          const redirectUrlParams = new URL(redirect);          
           if (redirectUrlParams.origin === urlParams.origin) {
             redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
+            if (redirect.match(/^\/.*#/)) { 
+              redirect = "/Approval/Submitted";
+              //redirect = redirect.substr(redirect.indexOf('#') + 1);
             }
           } else {
             window.location.href = '/';
@@ -124,7 +120,7 @@ const Model: LoginModelType = {
     setLoginInfo(state, { payload }) {
       setAuthority(payload.currentAuthority);
       if (Object.keys(payload).length > 0) {
-        Local.set('userInfo', payload)
+        Session.set('userInfo', payload)
       }
 
       //const { code = '' } = payload

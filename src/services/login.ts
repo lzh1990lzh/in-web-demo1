@@ -5,7 +5,7 @@ export interface LoginParamsType {
   userPassword: string;
   
 }
-
+//inspectgetway/login
 export async function fakeAccountLogin(params: LoginParamsType) {
   return request('/inspect-getway/login', {
     data: params,

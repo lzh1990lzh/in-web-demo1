@@ -116,17 +116,21 @@ const Model: appSubModelType = {
       console.log(exportList,"infoListinfoListinfoList");
       console.log(exportList.baseUrl);
       
-    
+      const { path, baseUrl } = exportList;
+      console.log(path,path,"#pathpathpath");
+      window.location.href = `${baseUrl}${path}`
       //if (code !== '0') return;
       yield put({
         type: 'setExport',
         payload: exportList,
       });
+      
+      
     },
     
   },
 
-  reducers: {
+  reducers: {  
     setList(state, { payload }) {
       return {
         ...state,

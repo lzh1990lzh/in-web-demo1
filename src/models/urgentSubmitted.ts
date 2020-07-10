@@ -104,6 +104,8 @@ const Model: appSubModelType = {
       const exportList  =res.data
       console.log(exportList,"infoListinfoListinfoList");
       //if (code !== '0') return;
+      const { path, baseUrl } = exportList;
+      window.location.href = `${baseUrl}${path}`
       yield put({
         type: 'setExport',
         payload: exportList,

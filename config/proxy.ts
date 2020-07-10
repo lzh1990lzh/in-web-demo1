@@ -13,7 +13,7 @@ export default {
     //   pathRewrite: { '^': '' },
     // },
     '/api/': {
-       //target: 'http://172.16.66.22:10086/oaserver',
+       //target: 'http://172.16.66.34:10086/oaserver',
      target: 'http://124.204.48.134:800/oaserver',      
       changeOrigin: true,
       pathRewrite: { '^/api': '' },

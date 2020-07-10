@@ -6,6 +6,11 @@ const { REACT_APP_ENV } = process.env;
 export default defineConfig({
   hash: true,
   antd: {},
+  history: {
+    type: 'hash',
+  },
+  base: '/yjsb/',
+  publicPath: '/yjsb/',
   dva: {
     hmr: true,
   },
@@ -46,14 +51,15 @@ export default defineConfig({
           routes: [
             {
               path: '/',
-              redirect: '/welcome',
+              //redirect: './Approval/Approval/Approval/Submitted',
+              redirect: './Approval/Submitted',
             },
-            {
-              path: '/welcome',
-              name: '首页',
-              icon: 'smile',
-              component: './Welcome',
-            },
+            // {
+            //   path: '/welcome',
+            //   name: '首页', 
+            //   icon: 'smile',
+            //   component: './Welcome',
+            // },
             {
               path: 'Approval',
               name: '审批',
@@ -139,6 +145,6 @@ export default defineConfig({
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
-    basePath: '/',
+    basePath: './',
   },
 });

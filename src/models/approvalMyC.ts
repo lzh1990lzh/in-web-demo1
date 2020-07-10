@@ -106,6 +106,8 @@ const Model: appSubModelType = {
       const { code, data } = res;
       console.log(res.data);
       const exportList  =res.data
+      const { path, baseUrl } = exportList;
+      window.location.href = `${baseUrl}${path}`
       
       yield put({
         type: 'setExport',

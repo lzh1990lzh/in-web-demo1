@@ -3,7 +3,7 @@ import { Avatar, Menu, Spin } from 'antd';
 import { ClickParam } from 'antd/es/menu';
 import React from 'react';
 import { history, ConnectProps, connect } from 'umi';
-import { Local } from '@/utils/session';
+import { Local,Session } from '@/utils/session';
 import { ConnectState } from '@/models/connect';
 import { CurrentUser } from '@/models/user';
 import HeaderDropdown from '../HeaderDropdown';
@@ -41,7 +41,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
       },
       menu,
     } = this.props;
-    const userName=Local.get('userName');
+    const userName=Session.get('userName');
     console.log(userName,"userName%%%%%%%%%%%%");
     const menuHeaderDropdown = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
@@ -68,7 +68,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     return(
       <HeaderDropdown overlay={menuHeaderDropdown}>
          <span className={`${styles.action} ${styles.account}`}>
-           <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
+           {/* <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" /> */}
            <span className={styles.name}>欢迎：{userName}</span>
          </span>
        </HeaderDropdown>

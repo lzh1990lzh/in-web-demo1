@@ -124,9 +124,9 @@ const CollectionsPage: React.FC<CollectionCreateFormProps> = (props) => {
         id:iid,
       }
     });
-    const { path, baseUrl } = appSubExport;
-    if(!path || !baseUrl) return
-    window.location.href = `${baseUrl}${path}`
+    // const { path, baseUrl } = appSubExport;
+    // if(!path || !baseUrl) return
+    // window.location.href = `${baseUrl}${path}`
   }
   function queryLit() {
     let params = {
@@ -169,8 +169,8 @@ const CollectionsPage: React.FC<CollectionCreateFormProps> = (props) => {
           <Form.Item name="name" label="日期">
           <RangePicker
             ranges={{
-              Today: [moment(), moment()],
-              'This Month': [moment().startOf('month'), moment().endOf('month')],
+              今天: [moment(), moment()],
+              '当月': [moment().startOf('month'), moment().endOf('month')],
             }}
             onChange={onChange}
           />
